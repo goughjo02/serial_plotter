@@ -20,15 +20,26 @@ p.setWindowTitle('live plot from serial')
 curve = p.plot()
 
 data = []
+times = np.array([], dtype='float64')
+y_data = np.array([], dtype='float64')
 
 def update():
-    global curve, data
+    global curve, data, times, y_data
     point = serial_connector_queue.get()
-    data.append(point)
-    xdata = np.array(data, dtype='float64')
-    curve.setData(xdata)
-    p.setYRange(0, max(data[-100:]))
-    p.setXRange(len(xdata)-100, len(xdata))
+    times = np.append(times, point.getSecond())
+    y_data = np.append(y_data, point.getYData())
+    times = times[-60:]
+    y_data = y_data[-60:]
+    # times.append(point.getSecond())
+    # y_data.append(point.getYData())
+    # print(times)
+    # print(y_data)
+    # print("        ")
+    # y_data = np.array(ydata, dtype='float64')
+    # x_data = np.array(times, dtype='float64')
+    curve.setData(times, y_data, pen='r')
+    p.setYRange(0, max(y_data))
+    p.setXRange(min(times), max(times))
     app.processEvents()
 
 

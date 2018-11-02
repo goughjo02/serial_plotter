@@ -4,6 +4,8 @@ from time import sleep
 
 import config
 
+from .timestamped_line import TimestampedLine
+
 
 class SerialConnector(Process):
     """A thread class which reads the lines
@@ -27,7 +29,7 @@ class SerialConnector(Process):
             else:
                 try:
                     line = self.ser.readline()
-                    self.q.put(int(line))
+                    self.q.put(TimestampedLine(line))
                     # y = x.decode()
                     # z = int(y)
                     # print(line)
